@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, Heart, Menu, X, Smartphone } from "lucide-react";
+import { Search, ShoppingBag, Heart, Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -10,216 +10,160 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            setIsScrolled(window.scrollY > 20);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navLinks = [
-        { name: "New Arrivals", href: "/new" },
-        { name: "Women", href: "/women" },
-        { name: "Men", href: "/men" },
-        { name: "Kids", href: "/kids" },
+    const navLinksLeft = [
+        { name: "Collection", href: "/collection" },
         { name: "Designers", href: "/designers" },
         { name: "Editorial", href: "/editorial" },
     ];
 
+    const navLinksRight = [
+        { name: "Men", href: "/men" },
+        { name: "Women", href: "/women" },
+        { name: "Kids", href: "/kids" },
+    ];
+
     return (
         <>
-            <nav
-                className={cn(
-                    "fixed top-0 left-0 w-full z-50 transition-all duration-700 ease-in-out px-6 py-4 lg:px-12",
-                    isScrolled
-                        ? "bg-white/90 dark:bg-black/90 backdrop-blur-md py-3 shadow-sm"
-                        : "bg-transparent"
-                )}
-            >
-                <div className="max-w-[1800px] mx-auto flex items-center justify-between">
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        className="lg:hidden p-2 -ml-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
-                        onClick={() => setIsMenuOpen(true)}
-                    >
-                        <Menu size={20} />
-                    </button>
+            <nav className={cn(
+                "fixed top-0 left-0 w-full z-[100] transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] px-[4vw] py-8",
+                isScrolled ? "bg-white/80 dark:bg-black/80 backdrop-blur-md py-6 -translate-y-2 border-b border-neutral-100 dark:border-neutral-900" : "bg-transparent"
+            )}>
+                <div className="flex items-center justify-between">
 
-                    {/* Desktop Links - Left */}
-                    <div className="hidden lg:flex items-center space-x-8">
-                        {navLinks.slice(0, 3).map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-[10px] uppercase tracking-[0.2em] font-medium luxury-link"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                    {/* Left: Menu Toggle + Desktop Links */}
+                    <div className="flex items-center space-x-12">
+                        <button
+                            onClick={() => setIsMenuOpen(true)}
+                            className="bg-transparent hover:scale-110 transition-transform flex items-center space-x-4 group"
+                        >
+                            <Menu size={24} strokeWidth={1} className="group-hover:text-brand-accent transition-colors" />
+                            <span className="text-[10px] uppercase tracking-[0.4em] font-bold hidden lg:inline">Discover</span>
+                        </button>
+
+                        <div className="hidden lg:flex items-center space-x-12">
+                            {navLinksLeft.map((link) => (
+                                <Link key={link.name} href={link.href} className="nav-link text-[10px]">
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Logo */}
-                    <Link
-                        href="/"
-                        className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-3 group"
-                    >
-                        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-brand-primary rounded-full flex items-center justify-center transition-transform duration-700 group-hover:scale-110">
-                            {/* Simplified Brand Mark */}
-                            <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45" />
+                    {/* Center: Minimalist High-Fashion Logo */}
+                    <Link href="/" className="absolute left-1/2 -translate-x-1/2 group">
+                        <div className="flex flex-col items-center">
+                            <span className="text-4xl md:text-5xl font-serif font-bold tracking-[-0.08em] group-hover:tracking-normal transition-all duration-[1s] ease-expo">
+                                ROOTS
+                            </span>
+                            <span className="text-[7px] uppercase tracking-[0.6em] font-bold opacity-40 group-hover:opacity-100 group-hover:text-brand-accent transition-all duration-700">Heritage Atelier</span>
                         </div>
-                        <span className="text-2xl lg:text-3xl font-bold tracking-[-0.05em] font-serif">ROOTS</span>
                     </Link>
 
-                    {/* Desktop Links - Right + Icons */}
-                    <div className="flex items-center space-x-4 lg:space-x-8">
-                        <div className="hidden lg:flex items-center space-x-8">
-                            {navLinks.slice(3).map((link) => (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    className="text-[10px] uppercase tracking-[0.2em] font-medium luxury-link"
-                                >
+                    {/* Right: Actions + Search */}
+                    <div className="flex items-center space-x-8 lg:space-x-12">
+                        <div className="hidden lg:flex items-center space-x-12">
+                            {navLinksRight.map((link) => (
+                                <Link key={link.name} href={link.href} className="nav-link text-[10px]">
                                     {link.name}
                                 </Link>
                             ))}
                         </div>
 
-                        <div className="flex items-center space-x-2 lg:space-x-4">
+                        <div className="flex items-center space-x-6">
                             <ThemeToggle />
-
-                            <button
-                                onClick={() => setIsLoginModalOpen(true)}
-                                className="hidden lg:flex p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all duration-300 relative group"
-                            >
-                                <Smartphone size={18} strokeWidth={1.5} />
-                                <span className="absolute -top-1 -right-1 text-[8px] bg-brand-primary text-white px-1 font-bold rounded-sm">OTP</span>
+                            <button className="hover:scale-110 transition-transform">
+                                <Search size={20} strokeWidth={1} />
                             </button>
-
-                            <Link href="/wishlist" className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all duration-300 relative group">
-                                <Heart size={18} strokeWidth={1.5} />
-                                <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-brand-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Link href="/wishlist" className="hidden sm:block hover:scale-110 transition-transform">
+                                <Heart size={20} strokeWidth={1} />
                             </Link>
-
-                            <Link href="/cart" className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all duration-300 relative">
-                                <ShoppingBag size={18} strokeWidth={1.5} />
-                                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black dark:bg-white text-[8px] font-bold text-white dark:text-black">
+                            <Link href="/cart" className="relative group hover:scale-110 transition-transform">
+                                <ShoppingBag size={20} strokeWidth={1} />
+                                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-accent text-[8px] font-bold text-white shadow-lg">
                                     0
                                 </span>
                             </Link>
                         </div>
                     </div>
                 </div>
-
-                {/* Mobile Sidebar Navigation */}
-                <AnimatePresence>
-                    {isMenuOpen && (
-                        <>
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 lg:hidden"
-                            />
-                            <motion.div
-                                initial={{ x: "-100%" }}
-                                animate={{ x: 0 }}
-                                exit={{ x: "-100%" }}
-                                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                                className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white dark:bg-black z-[60] lg:hidden p-8 flex flex-col shadow-2xl"
-                            >
-                                <div className="flex justify-between items-center mb-12">
-                                    <span className="font-serif text-2xl font-bold tracking-tighter">ROOTS</span>
-                                    <button onClick={() => setIsMenuOpen(false)} className="p-2 -mr-2">
-                                        <X size={24} strokeWidth={1.5} />
-                                    </button>
-                                </div>
-                                <div className="flex flex-col space-y-8">
-                                    {navLinks.map((link) => (
-                                        <Link
-                                            key={link.name}
-                                            href={link.href}
-                                            className="text-2xl font-light tracking-tight hover:pl-2 transition-all duration-300 flex items-center justify-between group"
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            <span className="group-hover:text-brand-primary transition-colors">{link.name}</span>
-                                            <span className="text-neutral-300 dark:text-neutral-800 text-sm font-serif italic opacity-0 group-hover:opacity-100 transition-opacity">Discover</span>
-                                        </Link>
-                                    ))}
-                                </div>
-                                <div className="mt-auto border-t border-neutral-100 dark:border-neutral-900 pt-8 space-y-4">
-                                    <button
-                                        onClick={() => {
-                                            setIsMenuOpen(false);
-                                            setIsLoginModalOpen(true);
-                                        }}
-                                        className="flex items-center space-x-4 text-sm font-medium w-full"
-                                    >
-                                        <Smartphone size={18} className="text-brand-primary" />
-                                        <span>OTP Login / Registration</span>
-                                    </button>
-                                    <p className="text-[10px] uppercase tracking-widest text-neutral-400">Available across India</p>
-                                </div>
-                            </motion.div>
-                        </>
-                    )}
-                </AnimatePresence>
             </nav>
 
-            {/* OTP Login Modal Placeholder */}
+            {/* High-Fashion Sidebar Drawer */}
             <AnimatePresence>
-                {isLoginModalOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                {isMenuOpen && (
+                    <>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setIsLoginModalOpen(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="fixed inset-0 bg-black/60 backdrop-blur-xl z-[150]"
                         />
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-lg bg-white dark:bg-neutral-900 p-12 lg:p-16 rounded-[2rem] shadow-2xl overflow-hidden"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "-100%" }}
+                            transition={{ type: "spring", damping: 30, stiffness: 200 }}
+                            className="fixed inset-y-0 left-0 w-full max-w-lg bg-brand-paper dark:bg-black z-[200] p-16 flex flex-col shadow-2xl overflow-hidden"
                         >
-                            {/* Brand Accent */}
-                            <div className="absolute top-0 left-0 w-full h-2 bg-brand-primary" />
+                            {/* Texture Overlay */}
+                            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-                            <h2 className="text-4xl font-serif mb-4">Secure Access</h2>
-                            <p className="text-neutral-500 dark:text-neutral-400 text-sm mb-12">Enter your mobile number to receive a 6-digit access code.</p>
-
-                            <div className="space-y-6">
-                                <div className="flex items-center border border-neutral-200 dark:border-neutral-800 rounded-xl px-6 py-4 focus-within:border-brand-primary transition-colors">
-                                    <span className="text-sm font-bold mr-4 border-r border-neutral-200 dark:border-neutral-800 pr-4">+91</span>
-                                    <input
-                                        type="tel"
-                                        placeholder="Mobile Number"
-                                        className="bg-transparent outline-none w-full text-sm font-medium tracking-widest"
-                                    />
+                            <div className="flex justify-between items-center mb-24">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center">
+                                        <Globe size={20} className="text-white animate-spin-slow" />
+                                    </div>
+                                    <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Bharat • Worldwide</span>
                                 </div>
-
-                                <button className="w-full bg-brand-primary text-white py-5 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold shadow-xl shadow-brand-primary/20 hover:bg-brand-primary/90 transition-all">
-                                    Request OTP
+                                <button onClick={() => setIsMenuOpen(false)} className="group p-4 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                                    <X size={32} strokeWidth={1} className="group-hover:rotate-90 transition-transform duration-500" />
                                 </button>
-
-                                <p className="text-[10px] text-center text-neutral-400 uppercase tracking-widest leading-relaxed">
-                                    By continuing, you agree to Roots India&apos;s <br />
-                                    <span className="underline cursor-pointer">Terms of Service</span> and <span className="underline cursor-pointer">Privacy Policy</span>
-                                </p>
                             </div>
 
-                            <button
-                                onClick={() => setIsLoginModalOpen(false)}
-                                className="absolute top-8 right-8 p-2 hover:bg-neutral-100 dark:hover:bg-white/5 rounded-full transition-colors"
-                            >
-                                <X size={20} strokeWidth={1.5} />
-                            </button>
+                            <div className="flex flex-col space-y-12">
+                                {["NEW ARRIVALS", "MENSWEAR", "WOMENSWEAR", "BAGS & SHOES", "FINE JEWELS", "ROOTS ARCHIVE", "EDITORIAL"].map((item, idx) => (
+                                    <Link
+                                        key={item}
+                                        href={`/${item.toLowerCase().replace(/ /g, '-')}`}
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="group relative inline-block overflow-hidden"
+                                    >
+                                        <motion.div
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 * idx }}
+                                            className="flex items-baseline space-x-6 group-hover:translate-x-4 transition-transform duration-700"
+                                        >
+                                            <span className="text-[10px] font-bold opacity-30 italic font-serif">0{idx + 1}</span>
+                                            <span className="text-5xl md:text-6xl font-serif tracking-tighter group-hover:text-brand-accent transition-colors italic leading-none">{item}</span>
+                                        </motion.div>
+                                    </Link>
+                                ))}
+                            </div>
+
+                            {/* Sidebar Footer */}
+                            <div className="mt-auto border-t border-black/10 dark:border-white/10 pt-16 flex flex-col space-y-8">
+                                <div className="flex justify-between text-[10px] uppercase tracking-[0.3em] font-bold">
+                                    <Link href="/help" className="hover:text-brand-accent">Support</Link>
+                                    <Link href="/shipping" className="hover:text-brand-accent">Shipping</Link>
+                                    <Link href="/returns" className="hover:text-brand-accent">Exchange</Link>
+                                </div>
+                                <div className="p-12 bg-black dark:bg-white text-white dark:text-black rounded-full text-center">
+                                    <button className="text-[10px] uppercase tracking-[0.5em] font-bold">Login to Atelier</button>
+                                </div>
+                            </div>
                         </motion.div>
-                    </div>
+                    </>
                 )}
             </AnimatePresence>
         </>

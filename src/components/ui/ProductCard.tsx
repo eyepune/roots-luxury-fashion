@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Heart, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart, Plus, Sparkles } from "lucide-react";
 
 interface ProductCardProps {
     id: string;
@@ -17,51 +16,73 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ id, name, brand, price, image, category }: ProductCardProps) => {
-    return (
-        <div className="group flex flex-col w-full h-full bg-white dark:bg-black transition-colors">
-            {/* Image Container */}
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-luxury-gray dark:bg-neutral-900">
-                <Link href={`/product/${id}`} className="block w-full h-full">
-                    <Image
-                        src={image}
-                        alt={name}
-                        fill
-                        className="object-cover object-center transition-transform duration-[1.5s] ease-out group-hover:scale-110"
-                    />
-                </Link>
+    const [isHovered, setIsHovered] = useState(false);
 
-                {/* Floating Actions */}
-                <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 transform translate-x-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
-                    <button className="p-3 bg-white dark:bg-black text-black dark:text-white hover:bg-brand-primary hover:text-white dark:hover:bg-brand-primary transition-colors duration-300 rounded-full shadow-sm">
-                        <Heart size={16} strokeWidth={1.5} />
+    return (
+        <div
+            className="group relative flex flex-col w-full h-full bg-transparent overflow-hidden"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <Link href={`/product/${id}`} className="block relative aspect-[4/5] bg-[#F4F4F4] dark:bg-neutral-900 overflow-hidden cursor-pointer">
+                {/* Background Shadow Effect on Hover */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isHovered ? 0.05 : 0 }}
+                    className="absolute inset-0 bg-black pointer-events-none z-10 transition-opacity duration-700"
+                />
+
+                <Image
+                    src={image}
+                    alt={name}
+                    fill
+                    className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-[1.05]"
+                />
+
+                {/* Micro Action Bar (Clean reveal) */}
+                <div className="absolute top-6 right-6 flex flex-col space-y-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-4 group-hover:translate-x-0 transition-transform duration-700">
+                    <button className="p-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl rounded-full shadow-2xl hover:bg-brand-accent hover:text-white transition-all duration-300">
+                        <Plus size={18} strokeWidth={1} />
+                    </button>
+                    <button className="p-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl rounded-full shadow-2xl hover:text-red-500 transition-all duration-300">
+                        <Heart size={18} strokeWidth={1} />
                     </button>
                 </div>
 
-                {/* Quick Add To Cart */}
-                <button className="absolute bottom-0 left-0 w-full py-5 bg-white/90 dark:bg-black/90 backdrop-blur-sm text-black dark:text-white text-[10px] uppercase tracking-[0.2em] font-bold transform translate-y-full transition-transform duration-500 group-hover:translate-y-0 flex items-center justify-center space-x-2 border-t border-neutral-100 dark:border-neutral-800">
-                    <Plus size={14} />
-                    <span>Quick Add</span>
-                </button>
-            </div>
-
-            {/* Info */}
-            <div className="pt-6 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-2">
-                    <div>
-                        <Link href={`/brand/${brand.toLowerCase()}`} className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 dark:text-neutral-600 hover:text-brand-primary transition-colors">
-                            {brand}
-                        </Link>
-                        <h3 className="font-serif text-xl tracking-tight leading-tight mt-1 group-hover:text-brand-primary transition-colors">
-                            <Link href={`/product/${id}`} className="hover:opacity-70 transition-opacity">
-                                {name}
-                            </Link>
-                        </h3>
-                    </div>
-                    <span className="text-sm font-medium tracking-tight text-brand-primary dark:text-white">
-                        ₹{price.toLocaleString('en-IN')}
-                    </span>
+                {/* AI Badge Reveal - Luxury touch */}
+                <div className="absolute bottom-6 left-6 z-20 overflow-hidden">
+                    <motion.div
+                        initial={{ y: 50, opacity: 0 }}
+                        animate={{ y: isHovered ? 0 : 50, opacity: isHovered ? 1 : 0 }}
+                        transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+                        className="bg-black text-white px-4 py-2 rounded-full flex items-center space-x-2 shadow-2xl border border-white/10"
+                    >
+                        <Sparkles size={12} className="text-brand-accent animate-pulse" />
+                        <span className="text-[8px] uppercase tracking-[0.4em] font-bold">AI Virtual Fit</span>
+                    </motion.div>
                 </div>
-                <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mt-auto uppercase tracking-wider">{category}</p>
+            </Link>
+
+            <div className="py-8 flex flex-col flex-grow bg-white dark:bg-black transition-colors duration-700">
+                <div className="flex justify-between items-start mb-1">
+                    <Link href={`/brand/${brand.toLowerCase()}`} className="text-[9px] uppercase tracking-[0.5em] font-bold text-neutral-400 hover:text-brand-accent transition-colors">
+                        {brand}
+                    </Link>
+                    <span className="text-[11px] font-bold tracking-tighter text-black dark:text-white">₹{price.toLocaleString('en-IN')}</span>
+                </div>
+
+                <h3 className="font-serif text-2xl tracking-tight leading-none mb-4 group-hover:translate-x-2 transition-transform duration-700">
+                    <Link href={`/product/${id}`} className="hover:opacity-60 transition-opacity">
+                        {name}
+                    </Link>
+                </h3>
+
+                <div className="flex items-center space-x-12 mt-auto">
+                    <span className="text-[10px] uppercase font-light text-neutral-400 tracking-[0.2em]">{category}</span>
+                    <Link href={`/product/${id}`} className="text-[9px] uppercase tracking-[0.4em] font-bold underline decoration-neutral-100 hover:decoration-brand-accent underline-offset-8 transition-all">
+                        View Details
+                    </Link>
+                </div>
             </div>
         </div>
     );
