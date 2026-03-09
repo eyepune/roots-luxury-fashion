@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { X, RotateCcw, Maximize2, Sparkles, SlidersHorizontal, User, Camera } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface AITryOnProps {
     isOpen: boolean;
@@ -222,9 +223,5 @@ const AITryOn = ({ isOpen, onClose, productImage, productName }: AITryOnProps) =
         </AnimatePresence>
     );
 };
-
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(" ");
-}
 
 export default AITryOn;

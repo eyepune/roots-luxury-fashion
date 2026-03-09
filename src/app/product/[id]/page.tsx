@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -21,7 +21,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import AITryOn from "@/components/ui/AITryOn";
 import { cn } from "@/lib/utils";
 
-const ProductPage = ({ params }: { params: { id: string } }) => {
+const ProductPage = ({ params }: { params: Promise<{ id: string }> }) => {
+    const { id } = use(params);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState(0);
@@ -34,7 +35,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
 
     // Mock product data based on the ID for demo
     const product = {
-        id: params.id,
+        id: id,
         name: "Aurelian Nomad Trench Coat",
         brand: "ROOTS ATELIER",
         price: 84500, // INR
