@@ -18,9 +18,9 @@ interface ProductCardProps {
 
 const ProductCard = ({ id, name, brand, price, image, category }: ProductCardProps) => {
     return (
-        <div className="group flex flex-col w-full h-full">
+        <div className="group flex flex-col w-full h-full bg-white dark:bg-black transition-colors">
             {/* Image Container */}
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-luxury-gray">
+            <div className="relative aspect-[3/4] w-full overflow-hidden bg-luxury-gray dark:bg-neutral-900">
                 <Link href={`/product/${id}`} className="block w-full h-full">
                     <Image
                         src={image}
@@ -32,13 +32,13 @@ const ProductCard = ({ id, name, brand, price, image, category }: ProductCardPro
 
                 {/* Floating Actions */}
                 <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 transform translate-x-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
-                    <button className="p-3 bg-white text-black hover:bg-black hover:text-white transition-colors duration-300 rounded-full shadow-sm">
+                    <button className="p-3 bg-white dark:bg-black text-black dark:text-white hover:bg-brand-primary hover:text-white dark:hover:bg-brand-primary transition-colors duration-300 rounded-full shadow-sm">
                         <Heart size={16} strokeWidth={1.5} />
                     </button>
                 </div>
 
                 {/* Quick Add To Cart */}
-                <button className="absolute bottom-0 left-0 w-full py-5 bg-white/90 backdrop-blur-sm text-black text-[10px] uppercase tracking-[0.2em] font-bold transform translate-y-full transition-transform duration-500 group-hover:translate-y-0 flex items-center justify-center space-x-2">
+                <button className="absolute bottom-0 left-0 w-full py-5 bg-white/90 dark:bg-black/90 backdrop-blur-sm text-black dark:text-white text-[10px] uppercase tracking-[0.2em] font-bold transform translate-y-full transition-transform duration-500 group-hover:translate-y-0 flex items-center justify-center space-x-2 border-t border-neutral-100 dark:border-neutral-800">
                     <Plus size={14} />
                     <span>Quick Add</span>
                 </button>
@@ -48,20 +48,20 @@ const ProductCard = ({ id, name, brand, price, image, category }: ProductCardPro
             <div className="pt-6 flex flex-col flex-grow">
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <Link href={`/brand/${brand.toLowerCase()}`} className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 hover:text-black transition-colors">
+                        <Link href={`/brand/${brand.toLowerCase()}`} className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 dark:text-neutral-600 hover:text-brand-primary transition-colors">
                             {brand}
                         </Link>
-                        <h3 className="font-serif text-xl tracking-tight leading-tight mt-1">
+                        <h3 className="font-serif text-xl tracking-tight leading-tight mt-1 group-hover:text-brand-primary transition-colors">
                             <Link href={`/product/${id}`} className="hover:opacity-70 transition-opacity">
                                 {name}
                             </Link>
                         </h3>
                     </div>
-                    <span className="text-sm font-medium tracking-tight">
-                        ${price.toLocaleString()}
+                    <span className="text-sm font-medium tracking-tight text-brand-primary dark:text-white">
+                        ₹{price.toLocaleString('en-IN')}
                     </span>
                 </div>
-                <p className="text-[10px] text-neutral-400 mt-auto uppercase tracking-wider">{category}</p>
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mt-auto uppercase tracking-wider">{category}</p>
             </div>
         </div>
     );

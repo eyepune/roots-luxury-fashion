@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -14,15 +15,10 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "ROOTS | Luxury Global Fashion Marketplace",
-  description: "Experience the pinnacle of fashion. Men, Women, and Kids collections from the world's most exclusive vendors.",
-  keywords: ["fashion", "luxury", "marketplace", "designer", "roots", "apparel", "footwear"],
-  metadataBase: new URL("https://roots-fashion.com"),
-  openGraph: {
-    title: "ROOTS | Luxury Global Fashion Marketplace",
-    description: "Curated luxury fashion for the modern connoisseur.",
-    images: ["/og-image.jpg"],
-  },
+  title: "ROOTS India | Luxury Global Fashion Marketplace",
+  description: "Experience the pinnacle of fashion in India. Curated collections for Men, Women, and Kids from global and Indian luxury vendors.",
+  keywords: ["fashion", "luxury", "marketplace", "designer", "roots india", "apparel", "footwear", "indian fashion"],
+  metadataBase: new URL("https://roots-india.com"),
 };
 
 export default function RootLayout({
@@ -31,13 +27,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${inter.variable} ${cormorant.variable} bg-white text-black antialiased selection:bg-black selection:text-white`}
+        className={`${inter.variable} ${cormorant.variable} antialiased selection:bg-brand-primary selection:text-white pb-mobile-nav`}
       >
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
