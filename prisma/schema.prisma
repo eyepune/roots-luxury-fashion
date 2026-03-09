@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          Role      @default(CUSTOMER)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  vendorProfile VendorProfile?
+  orders        Order[]
+  wishlist      Wishlist?
+}
+
+model VendorProfile {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id])
+  storeName      String    @unique
+  slug           String    @unique
+  bio            String?
+  logo           String?
+  isVerified     Boolean   @default(false)
+  commissionRate Float     @default(15.0) // 15% platform fee
+  
+  products       Product[]
+  orders         OrderItem[] // Items sold by this vendor
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Category {
+  id               String    @id @default(cuid())
+  name             String
+  slug             String    @unique
+  parentId         String?
+  parent           Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children         Category[] @relation("CategoryToCategory")
+  
+  products         Product[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  vendorId      String
+  vendor        VendorProfile @relation(fields: [vendorId], references: [id])
+  categoryId    String
+  category      Category  @relation(fields: [categoryId], references: [id])
+  
+  name          String
+  slug          String    @unique
+  description   String    @db.Text
+  basePrice     Float
+  images        String[]
+  isFeatured    Boolean   @default(false)
+  isArchived    Boolean   @default(false)
+  
+  variants      ProductVariant[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ProductVariant {
+  id        String    @id @default(cuid())
+  productId String
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  size      String?
+  color     String?
+  sku       String    @unique
+  price     Float?    // Optional override of base price
+  stock     Int       @default(0)
+  
+  orderItems OrderItem[]
+}
+
+model Order {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  
+  status       OrderStatus @default(PENDING)
+  totalPrice   Float
+  shippingAddr Json
+  paymentId    String?   // Stripe Payment Intent ID
+  
+  orderItems   OrderItem[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model OrderItem {
+  id              String         @id @default(cuid())
+  orderId         String
+  order           Order          @relation(fields: [orderId], references: [id])
+  variantId       String
+  variant         ProductVariant @relation(fields: [variantId], references: [id])
+  vendorId        String
+  vendor          VendorProfile  @relation(fields: [vendorId], references: [id])
+  
+  quantity        Int
+  priceAtPurchase Float
+}
+
+model Wishlist {
+  id     String    @id @default(cuid())
+  userId String    @unique
+  user   User      @relation(fields: [userId], references: [id])
+  
+  products String[] // Array of product IDs
+}
