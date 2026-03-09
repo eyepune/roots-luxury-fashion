@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,6 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
+      <head>
+        <Script
+          id="razorpay-checkout-js"
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+      </head>
       <body
         className={`${inter.variable} ${cormorant.variable} antialiased selection:bg-brand-primary selection:text-white pb-mobile-nav`}
       >
